@@ -6,10 +6,10 @@ A REST API for registering and monitoring cloud services (APIs, databases, front
 containers) across environments. Built to demonstrate backend engineering, authentication,
 database design, Docker, CI/CD, and security practices.
 
-> **Status: Phases 1–8 complete** — auth (JWT), service CRUD with ownership, validation
-> and unified JSON error handling, Docker + Compose, a 23-test pytest suite, and a GitHub
-> Actions CI pipeline (lint → test → audit → image build + scan). Security hardening and
-> cloud deployment are next.
+> **Status: Phases 1–9 complete** — auth (JWT), service CRUD with ownership, validation
+> and unified JSON error handling, Docker + Compose, a 23-test pytest suite, a GitHub
+> Actions CI pipeline (lint → test → audit → image build + scan), and security hardening
+> (rate limiting, pip-audit, Trivy image scan, Dependabot). Cloud deployment is next.
 
 ## Tech stack
 
@@ -76,6 +76,6 @@ cloudops-lab/
 - [x] Phase 6 — Docker + Docker Compose
 - [x] Phase 7 — Pytest test suite
 - [x] Phase 8 — GitHub Actions CI
-- [ ] Phase 9 — Security scanning (pip-audit, Trivy, Dependabot)
+- [x] Phase 9 — Security scanning + rate limiting (pip-audit, Trivy, Dependabot)
 - [ ] Phase 10 — Cloud deployment (Render / Railway)
 ```

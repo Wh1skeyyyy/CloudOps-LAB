@@ -1,0 +1,17 @@
+# Dependabot opens PRs when dependencies have updates — including security
+# fixes. Combined with pip-audit in CI, this covers both detection (audit)
+# and remediation (automated update PRs).
+version: 2
+updates:
+  # Python dependencies (requirements.txt / requirements-dev.txt)
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # The GitHub Actions used in .github/workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

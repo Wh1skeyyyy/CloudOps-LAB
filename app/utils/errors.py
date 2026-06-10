@@ -54,6 +54,13 @@ def register_error_handlers(app, jwt):
             "message": "Something went wrong",
         }), 500
 
+    @app.errorhandler(429)
+    def handle_429(err):
+        return jsonify({
+            "error": "Too many requests",
+            "message": f"Rate limit exceeded ({err.description}). Try again later.",
+        }), 429
+
     # JWT-specific responses
     @jwt.unauthorized_loader
     def jwt_missing(_reason):

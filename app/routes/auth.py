@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
-from app.extensions import db
+from app.extensions import db, limiter
 from app.models import User
 from app.utils.errors import APIError
 from app.utils.validators import require_fields
@@ -10,6 +10,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
 @auth_bp.post("/register")
+@limiter.limit("5 per minute")
 def register():
     """Create a new account and return a JWT access token."""
     data = request.get_json(silent=True) or {}
@@ -35,6 +36,7 @@ def register():
 
 
 @auth_bp.post("/login")
+@limiter.limit("10 per minute")
 def login():
     """Verify credentials and return a JWT access token."""
     data = request.get_json(silent=True) or {}

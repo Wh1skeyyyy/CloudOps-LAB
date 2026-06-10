@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.config import get_config
-from app.extensions import db, jwt
+from app.extensions import db, jwt, limiter
 from app.utils.errors import register_error_handlers
 
 
@@ -13,6 +13,7 @@ def create_app(config_name=None):
     # Initialise extensions
     db.init_app(app)
     jwt.init_app(app)
+    limiter.init_app(app)
 
     # Wire global error handlers (incl. JWT) so every error is consistent JSON
     register_error_handlers(app, jwt)

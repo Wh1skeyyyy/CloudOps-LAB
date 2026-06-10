@@ -32,6 +32,8 @@ class DevelopmentConfig(BaseConfig):
 class TestingConfig(BaseConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    # Rate limits would make unrelated tests flaky, so disable them here.
+    RATELIMIT_ENABLED = False
 
 
 class ProductionConfig(BaseConfig):
