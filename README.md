@@ -1,11 +1,15 @@
 # CloudOps Lab
 
+![CI](https://github.com/Wh1skeyyyy/CloudOps-LAB/actions/workflows/ci.yml/badge.svg)
+
 A REST API for registering and monitoring cloud services (APIs, databases, frontends,
 containers) across environments. Built to demonstrate backend engineering, authentication,
 database design, Docker, CI/CD, and security practices.
 
-> **Status: Phases 1–2 complete** — project setup, health endpoint, and database models
-> (User, CloudService). Auth, CRUD, validation, Docker, CI/CD, and deployment are next.
+> **Status: Phases 1–8 complete** — auth (JWT), service CRUD with ownership, validation
+> and unified JSON error handling, Docker + Compose, a 23-test pytest suite, and a GitHub
+> Actions CI pipeline (lint → test → audit → image build + scan). Security hardening and
+> cloud deployment are next.
 
 ## Tech stack
 
@@ -66,12 +70,12 @@ cloudops-lab/
 
 - [x] Phase 1 — Flask setup + health endpoint
 - [x] Phase 2 — Database models (User, CloudService)
-- [ ] Phase 3 — Authentication (register, login, JWT, ownership)
-- [ ] Phase 4 — Service CRUD + filtering
-- [ ] Phase 5 — Validation + error handling
-- [ ] Phase 6 — Docker + Docker Compose
-- [ ] Phase 7 — Pytest test suite
-- [ ] Phase 8 — GitHub Actions CI
+- [x] Phase 3 — Authentication (register, login, JWT, ownership)
+- [x] Phase 4 — Service CRUD + filtering
+- [x] Phase 5 — Validation + error handling
+- [x] Phase 6 — Docker + Docker Compose
+- [x] Phase 7 — Pytest test suite
+- [x] Phase 8 — GitHub Actions CI
 - [ ] Phase 9 — Security scanning (pip-audit, Trivy, Dependabot)
 - [ ] Phase 10 — Cloud deployment (Render / Railway)
 ```

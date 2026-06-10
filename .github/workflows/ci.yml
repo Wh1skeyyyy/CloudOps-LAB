@@ -1,0 +1,81 @@
+# CI pipeline — runs on every push to main and every pull request.
+#
+# Job graph:
+#   lint-and-test ─┐
+#   security-audit ─┴─> docker (build image + Trivy scan)
+#
+# Python 3.12 matches the version in the Dockerfile, so what CI tests
+# is what production runs.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    name: Lint & test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Run tests (pytest)
+        run: python -m pytest tests/ -v
+
+  security-audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Audit dependencies (pip-audit)
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt
+
+  docker:
+    name: Docker build & image scan
+    runs-on: ubuntu-latest
+    # Only build the image if code quality and dependency checks pass
+    needs: [lint-and-test, security-audit]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t cloudops-lab:${{ github.sha }} .
+
+      # NOTE: pinned to v0.36.0 deliberately. In March 2026 an attacker
+      # force-pushed malicious payloads to most of this action's version
+      # tags; v0.35.0+ immutable releases are the verified-safe ones.
+      # Real-world lesson: mutable action tags are a supply-chain risk.
+      - name: Scan image for vulnerabilities (Trivy)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: cloudops-lab:${{ github.sha }}
+          format: table
+          # Fail the build only on serious, fixable issues
+          exit-code: "1"
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true

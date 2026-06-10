@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.extensions import db
 
@@ -8,7 +8,9 @@ class CloudService(db.Model):
 
     # Allowed values live on the model so Phase 5 validators can reuse them.
     SERVICE_TYPES = ("frontend", "backend", "database", "worker", "container", "storage", "other")
-    PROVIDERS = ("AWS", "Azure", "Google Cloud", "Render", "Railway", "Vercel", "Docker Local", "Other")
+    PROVIDERS = (
+        "AWS", "Azure", "Google Cloud", "Render", "Railway", "Vercel", "Docker Local", "Other",
+    )
     ENVIRONMENTS = ("development", "testing", "staging", "production")
     DEPLOYMENT_STATUSES = ("pending", "deploying", "successful", "failed", "rolled_back")
     HEALTH_STATUSES = ("healthy", "degraded", "down", "unknown")
@@ -33,12 +35,12 @@ class CloudService(db.Model):
     last_checked_at = db.Column(db.DateTime)
 
     created_at = db.Column(
-        db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
+        db.DateTime, default=lambda: datetime.now(UTC), nullable=False
     )
     updated_at = db.Column(
         db.DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
         nullable=False,
     )
 

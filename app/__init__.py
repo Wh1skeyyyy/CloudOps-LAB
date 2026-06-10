@@ -18,11 +18,11 @@ def create_app(config_name=None):
     register_error_handlers(app, jwt)
 
     # Import models so SQLAlchemy (and create_all) are aware of them
-    from app.models import User, CloudService  # noqa: F401
+    from app.models import CloudService, User  # noqa: F401
+    from app.routes.auth import auth_bp
 
     # Register blueprints
     from app.routes.health import health_bp
-    from app.routes.auth import auth_bp
     from app.routes.services import services_bp
 
     app.register_blueprint(health_bp)

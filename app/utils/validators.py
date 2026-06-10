@@ -27,6 +27,6 @@ def validate_url(value, field_name: str) -> None:
     try:
         parsed = urlparse(value)
     except (TypeError, ValueError):
-        raise APIError(f"{field_name} must be a valid http(s) URL")
+        raise APIError(f"{field_name} must be a valid http(s) URL") from None
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         raise APIError(f"{field_name} must be a valid http(s) URL")

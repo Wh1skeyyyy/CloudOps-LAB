@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -37,7 +37,9 @@ def _validate_service_payload(data: dict) -> None:
     validate_enum(data.get("service_type"), CloudService.SERVICE_TYPES, "service_type")
     validate_enum(data.get("provider"), CloudService.PROVIDERS, "provider")
     validate_enum(data.get("environment"), CloudService.ENVIRONMENTS, "environment")
-    validate_enum(data.get("deployment_status"), CloudService.DEPLOYMENT_STATUSES, "deployment_status")
+    validate_enum(
+        data.get("deployment_status"), CloudService.DEPLOYMENT_STATUSES, "deployment_status"
+    )
     validate_enum(data.get("health_status"), CloudService.HEALTH_STATUSES, "health_status")
     validate_url(data.get("repository_url"), "repository_url")
     validate_url(data.get("service_url"), "service_url")
@@ -127,7 +129,7 @@ def update_health(service_id):
         service.health_status = data["health_status"]
     if "response_time_ms" in data:
         service.response_time_ms = data["response_time_ms"]
-    service.last_checked_at = datetime.now(timezone.utc)
+    service.last_checked_at = datetime.now(UTC)
 
     db.session.commit()
     return jsonify({"service": service.to_dict()}), 200
