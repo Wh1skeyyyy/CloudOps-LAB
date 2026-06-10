@@ -32,8 +32,8 @@ EXPOSE 5000
 
 # Liveness probe — Docker / Render / Railway / k8s all read this
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -fsS http://localhost:5000/health || exit 1
+  CMD curl -fsS http://localhost:${PORT:-5000}/health || exit 1
 
 # Create tables on startup (idempotent — create_all skips existing tables),
 # then `exec` so gunicorn replaces the shell and receives SIGTERM directly.
-CMD flask init-db && exec gunicorn --bind 0.0.0.0:5000 --workers 2 --access-logfile - run:app
+CMD flask init-db && exec gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 --access-logfile - run:app
