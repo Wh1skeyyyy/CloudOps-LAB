@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "CloudOps Lab API",
+    "description": "Endpoints for the CloudOps Lab API. Set the `baseUrl` variable to the live URL (https://cloudops-lab.onrender.com) or http://127.0.0.1:5000 for local. Run **Register** or **Login** first — the JWT is captured automatically into the `access_token` variable, and **Create Service** stores the new id in `service_id`, so the authenticated requests just work.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://cloudops-lab.onrender.com" },
+    { "key": "access_token", "value": "" },
+    { "key": "service_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "API Info (root)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+      }
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "Register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.access_token) {",
+              "  pm.collectionVariables.set('access_token', json.access_token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Genesis\",\n  \"email\": \"you@example.com\",\n  \"password\": \"a-real-password\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.access_token) {",
+              "  pm.collectionVariables.set('access_token', json.access_token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"you@example.com\",\n  \"password\": \"a-real-password\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+      }
+    },
+    {
+      "name": "Get Profile",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/auth/profile", "host": ["{{baseUrl}}"], "path": ["api", "auth", "profile"] }
+      }
+    },
+    {
+      "name": "Create Service",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.service) {",
+              "  pm.collectionVariables.set('service_id', json.service.id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"CloudOps API\",\n  \"service_type\": \"backend\",\n  \"provider\": \"Render\",\n  \"environment\": \"production\",\n  \"repository_url\": \"https://github.com/Wh1skeyyyy/CloudOps-LAB\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/services", "host": ["{{baseUrl}}"], "path": ["api", "services"] }
+      }
+    },
+    {
+      "name": "List Services",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/services", "host": ["{{baseUrl}}"], "path": ["api", "services"] }
+      }
+    },
+    {
+      "name": "List Services (filtered)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/services?environment=production&provider=Render",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "services"],
+          "query": [
+            { "key": "environment", "value": "production" },
+            { "key": "provider", "value": "Render" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Service",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/services/{{service_id}}", "host": ["{{baseUrl}}"], "path": ["api", "services", "{{service_id}}"] }
+      }
+    },
+    {
+      "name": "Update Service",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"deployment_status\": \"successful\",\n  \"version\": \"1.0.0\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/services/{{service_id}}", "host": ["{{baseUrl}}"], "path": ["api", "services", "{{service_id}}"] }
+      }
+    },
+    {
+      "name": "Update Service Health",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"health_status\": \"healthy\",\n  \"response_time_ms\": 42\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/services/{{service_id}}/health", "host": ["{{baseUrl}}"], "path": ["api", "services", "{{service_id}}", "health"] }
+      }
+    },
+    {
+      "name": "Delete Service",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] },
+        "method": "DELETE",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/services/{{service_id}}", "host": ["{{baseUrl}}"], "path": ["api", "services", "{{service_id}}"] }
+      }
+    }
+  ]
+}

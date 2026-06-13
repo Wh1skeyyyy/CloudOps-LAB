@@ -67,6 +67,7 @@ Base URL (local): `http://127.0.0.1:5000` · (live): `https://cloudops-lab.onren
 
 | Method | Endpoint | Auth | Description |
 |---|---|:---:|---|
+| `GET` | `/` | — | API info + endpoint map |
 | `GET` | `/health` | — | Liveness probe |
 | `POST` | `/api/auth/register` | — | Create an account → returns JWT (5/min) |
 | `POST` | `/api/auth/login` | — | Authenticate → returns JWT (10/min) |
@@ -106,6 +107,14 @@ curl -X POST https://cloudops-lab.onrender.com/api/services \
   -H "Content-Type: application/json" \
   -d '{"name":"CloudOps API","environment":"production","provider":"Render"}'
 ```
+
+## API testing (Postman)
+
+Import [`postman/CloudOps-Lab.postman_collection.json`](postman/CloudOps-Lab.postman_collection.json)
+into Postman. It's pre-wired: run **Register** (or **Login**) and the JWT is captured automatically
+into a collection variable, and **Create Service** stores the new id — so the authenticated requests
+work without copy-pasting tokens. Set the `baseUrl` variable to the live URL or
+`http://127.0.0.1:5000` for local.
 
 ## Getting started (local)
 
